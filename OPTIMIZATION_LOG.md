@@ -75,7 +75,7 @@
 
 ### [优化项 9]: 数据持久化 (SQLite + SQLAlchemy)
 **意图**: 解决由于项目纯粹依赖内存导致重启后数据全部丢失的问题（即方向二优化）。
-**执行改动**: 
+**执行改动**:
 - 引入了 `SQLAlchemy`，创建了 `backend/database.py` 定义了统一的 SQLite 数据表结构。
 - 深度改造了 `ActiveLearningAPI`、`DataQualityAPI`、`DriftDetectionAPI`、`DataVersionControl` 四个核心数据管理模块的初始化流程及增改接口，将其连接到 `DBActiveLearningConfig`, `DBQualityReport` 等真实表。
 - 修改了测试脚本，通过在 `pytest` 中自动切换 `:memory:` SQLite 内存数据库来保证测试运行不受数据污染。
@@ -84,7 +84,7 @@
 
 ### [优化项 10]: 前端业务仪表盘开发 (React + Vite + Recharts)
 **意图**: 完成方向三目标，为后端数据和监控提供直观、现代化的可视化管理控制台，使得 Active Learning，Drift Detection 等功能可以脱离 API 直接进行监控与交互。
-**执行改动**: 
+**执行改动**:
 - 基于已有的 Vite 空白骨架，引入 `react-router-dom` 搭建多页路由架构。
 - 引入 `recharts` 构建实时漂移与质量大屏，使用 `lucide-react` 提供现代化 Icon。
 - 编写了极致的现代化 UI (`index.css`)：应用了 Glassmorphism (玻璃拟物化)、全局深色模式 (Dark Mode)、全局 CSS 变量管理以及动态悬浮/微动画效果。
@@ -96,13 +96,13 @@
 
 ### [优化项 11]: 自主识别与清理冗余代码 (死代码消除)
 **意图**: 解决由于项目多次重构和升级（特别是数据持久化与 FastAPI 改造）遗留下来的废弃文件，从而精简代码库并提高可维护性。
-**执行改动**: 
+**执行改动**:
 - 通过深度扫描引用关系，确认 `backend/dca.py` (旧版门面)、`backend/config.py` (纯内存配置)、`backend/utils/storage.py` (废弃的 PickleStorage 序列化方案) 均已被替代且零引用。
 - 删除上述冗余文件，以及完全空闲的 `backend/data_quality/reporters/` 与 `backend/drift_detection/alerts/` 目录结构。
 **实际收益**: 清除了超过数百行的“死代码” (Dead Code)。整体项目的测试覆盖率（由于移除了大量未经测试或不适用的旧代码），因此自动从 **80%** 跃升到了 **87%**，项目结构更加纯净！
 ### [优化项 12]: 扩展业务维度 - 新增 2D 嵌入向量投影与数据探索面板 (Data Exploration)
 **意图**: 解决用户提出的“项目仍太小，需要扩展方向”需求。在数据中心化 AI (DCA) 中，高维数据的可视化聚类（如发现数据分布异常或聚类边界）是核心能力。
-**执行改动**: 
+**执行改动**:
 - **后端抽象**: 建立全新的 `backend/exploration` 模块。通过 `sklearn.decomposition.PCA` 实现降维逻辑抽象，将结构化的高维 Embeddings（或模拟聚类）映射为二维散点，下发坐标点及置信度信息。
 - **服务网关接入**: 在 `backend/server.py` 新增 `/api/exploration/scatter/{project_id}` RESTful 端点，提供跨域可视化数据流。
 - **前端数据大屏开发**: 编写了崭新的 `frontend/src/pages/DataExploration.tsx`。
@@ -113,7 +113,7 @@
 
 ### [优化项 13]: 清理项目构建初期的指令与模板记录
 **意图**: 解决初创阶段用于引导生成项目的庞大 Markdown 指令集，因为它们不仅占据空间、污染文件系统，还会干扰全局搜索或未来的重构分析。
-**执行改动**: 
+**执行改动**:
 - 通过 PowerShell 彻底递归删除了上级目录中的 `dca-instructions` 文件夹（包含 10 余个用于初始化的 `.md` 引导文件）。
 **实际收益**: 使得最终代码仓库 `LabelStudio_DCA` 环境极其干净，只剩下真正的业务代码库 `dca-project` 与运行时规范，消除了一切脚手架噪音。
 **结论**: 成功。项目彻底完成清洁。
@@ -123,7 +123,7 @@
 ## 进展汇总
 - **测试通过数**: 45 passed
 - **测试覆盖率**: 80% (由于新增数据库初始化逻辑有细微增减)
-- **核心优化进展**: 
+- **核心优化进展**:
   - 核心算法性能优化完成 (O(N*K))
   - 风格与 Lint 问题全部收敛
   - 对接外挂框架 (FastAPI & Vite) 初始化就绪

@@ -20,3 +20,10 @@ django-filter>=23.0
 # Testing
 pytest>=7.4.0
 pytest-cov>=4.1.0
+
+# Backend Web & Database
+fastapi>=0.68.0
+pydantic>=1.8.0
+sqlalchemy>=2.0.0
+uvicorn>=0.15.0
+httpx>=0.20.0

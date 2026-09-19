@@ -59,7 +59,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
                 <YAxis stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ background: 'var(--bg-card)', border: 'var(--glass-border)', borderRadius: '0.5rem', backdropFilter: 'blur(12px)' }}
                   itemStyle={{ color: 'var(--text-main)' }}
                 />
@@ -72,7 +72,7 @@ export default function Dashboard() {
         <div className="card animate-fade-in delay-2" style={{ display: 'flex', flexDirection: 'column' }}>
           <h2 className="card-title">Recent Activity</h2>
           <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             <div style={{ display: 'flex', gap: '1rem' }}>
               <div style={{ width: '2px', background: 'var(--primary)', borderRadius: '2px' }}></div>
               <div>
@@ -99,9 +99,9 @@ export default function Dashboard() {
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Yesterday</div>
               </div>
             </div>
-            
+
           </div>
-          
+
           <button className="btn btn-outline" style={{ marginTop: 'auto', width: '100%', justifyContent: 'center' }}>
             View All Logs
           </button>

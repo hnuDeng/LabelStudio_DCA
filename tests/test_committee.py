@@ -46,10 +46,10 @@ class TestQueryByCommittee(unittest.TestCase):
                 {'result': [{'value': {'choices': ['C']}}]}
             ]
         }
-        
+
         selected, scores = self.strategy.select(tasks, predictions, batch_size=2)
         self.assertEqual(len(selected), 2)
-        
+
         # Task 3 has max disagreement (A, B, C)
         # Task 1 has some disagreement (A, B, A)
         # Task 2 has no disagreement (A, A, A)

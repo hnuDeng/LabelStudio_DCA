@@ -64,34 +64,34 @@ async def label_studio_webhook(payload: WebhookPayload, verified: bool = Depends
     """
     action = payload.action
     project_id = payload.project.get("id", 1)
-    
+
     response_data = {"status": "received", "action": action}
-    
+
     if action == "ANNOTATION_CREATED" or action == "ANNOTATION_UPDATED":
         # 1. Trigger Data Quality Check
         if payload.annotation and payload.task:
             task_data = [payload.task]
             annotation_data = [payload.annotation]
-            
+
             # This would run DQ assessment on the new annotation
-            # dq_api.assess_task(...) 
-            
+            # dq_api.assess_task(...)
+
             # 2. Trigger Active Learning updates
             # We need the config_id to submit feedback or tasks.
             # Since we don't have it directly from the webhook, we might look it up.
             # For now, this is a placeholder.
             # al_api.add_feedback(config_id=1, task_id=payload.task.get("id"), feedback_type="annotated")
-            
+
             # 3. Check for anomalies
             # anomaly_engine.detect_anomalies(...)
-            
+
             response_data["message"] = "Processed annotation via DCA pipeline"
-            
+
     elif action == "TASKS_CREATED":
         # When new tasks are added, we might want to run Active Learning selection
         # selected = al_api.select_tasks_for_annotation(project_id=project_id, tasks=payload.project.get("tasks", []))
         response_data["message"] = "Processed new tasks"
-        
+
     return response_data
 
 @app.get("/api/health")

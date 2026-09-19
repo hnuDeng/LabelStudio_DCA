@@ -11,10 +11,10 @@ from backend.data_quality.assessors.engine import QualityAssessmentEngine
 
 class TestConsistencyAssessor(unittest.TestCase):
     """Tests for Consistency Assessor."""
-    
+
     def setUp(self):
         self.assessor = ConsistencyAssessor(project_id=1)
-    
+
     def test_consistent_annotations(self):
         """Test with consistent annotations."""
         tasks = [{'id': 1, 'data': {'text': 'hello'}}]
@@ -22,12 +22,12 @@ class TestConsistencyAssessor(unittest.TestCase):
             {'id': 1, 'task_id': 1, 'annotator_id': 1, 'result': [{'value': {'choices': ['positive']}}]},
             {'id': 2, 'task_id': 1, 'annotator_id': 2, 'result': [{'value': {'choices': ['positive']}}]},
         ]
-        
+
         result = self.assessor.assess(tasks, annotations)
-        
+
         self.assertEqual(result.score, 1.0)
         self.assertEqual(len(result.issues), 0)
-    
+
     def test_inconsistent_annotations(self):
         """Test with inconsistent annotations."""
         tasks = [{'id': 1, 'data': {'text': 'hello'}}]
@@ -35,19 +35,19 @@ class TestConsistencyAssessor(unittest.TestCase):
             {'id': 1, 'task_id': 1, 'annotator_id': 1, 'result': [{'value': {'choices': ['positive']}}]},
             {'id': 2, 'task_id': 1, 'annotator_id': 2, 'result': [{'value': {'choices': ['negative']}}]},
         ]
-        
+
         result = self.assessor.assess(tasks, annotations)
-        
+
         self.assertLess(result.score, 1.0)
         self.assertGreater(len(result.issues), 0)
 
 
 class TestCompletenessAssessor(unittest.TestCase):
     """Tests for Completeness Assessor."""
-    
+
     def setUp(self):
         self.assessor = CompletenessAssessor(project_id=1)
-    
+
     def test_complete_coverage(self):
         """Test with complete coverage."""
         tasks = [
@@ -58,11 +58,11 @@ class TestCompletenessAssessor(unittest.TestCase):
             {'id': 1, 'task_id': 1, 'annotator_id': 1, 'result': [{'value': {'choices': ['positive']}}]},
             {'id': 2, 'task_id': 2, 'annotator_id': 1, 'result': [{'value': {'choices': ['negative']}}]},
         ]
-        
+
         result = self.assessor.assess(tasks, annotations)
-        
+
         self.assertGreater(result.score, 0.8)
-    
+
     def test_incomplete_coverage(self):
         """Test with incomplete coverage."""
         tasks = [
@@ -73,18 +73,18 @@ class TestCompletenessAssessor(unittest.TestCase):
         annotations = [
             {'id': 1, 'task_id': 1, 'annotator_id': 1, 'result': [{'value': {'choices': ['positive']}}]},
         ]
-        
+
         result = self.assessor.assess(tasks, annotations)
-        
+
         self.assertLess(result.score, 0.6)
 
 
 class TestQualityAssessmentEngine(unittest.TestCase):
     """Tests for Quality Assessment Engine."""
-    
+
     def setUp(self):
         self.engine = QualityAssessmentEngine(project_id=1)
-    
+
     def test_run_assessment(self):
         """Test running full assessment."""
         tasks = [
@@ -95,9 +95,9 @@ class TestQualityAssessmentEngine(unittest.TestCase):
             {'id': 1, 'task_id': 1, 'annotator_id': 1, 'result': [{'value': {'choices': ['positive']}}]},
             {'id': 2, 'task_id': 2, 'annotator_id': 1, 'result': [{'value': {'choices': ['negative']}}]},
         ]
-        
+
         report = self.engine.run_assessment(tasks, annotations)
-        
+
         self.assertIsNotNone(report)
         self.assertGreater(report.overall_score, 0)
         self.assertEqual(report.tasks_analyzed, 2)

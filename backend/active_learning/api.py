@@ -36,12 +36,12 @@ class ActiveLearningAPI:
         self.selectors: Dict[int, TaskSelector] = {}
         self._next_config_id = 1
         self._next_round_id = 1
-        
+
         # Initialize DB mapping
         from backend.database import init_db, SessionLocal, DBActiveLearningConfig, DBActiveLearningRound
         from backend.active_learning.models import StrategyType, UncertaintyMethod
         init_db()
-        
+
         # Load state from DB
         with SessionLocal() as db:
             db_configs = db.query(DBActiveLearningConfig).all()
@@ -57,7 +57,7 @@ class ActiveLearningAPI:
                 self.selectors[config.id] = TaskSelector(config)
                 self.rounds[config.id] = []
                 self._next_config_id = max(self._next_config_id, config.id + 1)
-                
+
             db_rounds = db.query(DBActiveLearningRound).all()
             for dbr in db_rounds:
                 r = ActiveLearningRound(

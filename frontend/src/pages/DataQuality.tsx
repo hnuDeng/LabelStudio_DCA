@@ -61,18 +61,18 @@ export default function DataQuality() {
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <div style={{ position: 'relative' }}>
                 <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input 
-                  type="text" 
-                  placeholder="Search issues..." 
-                  style={{ 
-                    padding: '0.5rem 0.5rem 0.5rem 2.25rem', 
-                    borderRadius: '0.5rem', 
-                    background: 'var(--glass-bg)', 
+                <input
+                  type="text"
+                  placeholder="Search issues..."
+                  style={{
+                    padding: '0.5rem 0.5rem 0.5rem 2.25rem',
+                    borderRadius: '0.5rem',
+                    background: 'var(--glass-bg)',
                     border: '1px solid var(--border)',
                     color: 'var(--text-main)',
                     fontSize: '0.875rem',
                     outline: 'none'
-                  }} 
+                  }}
                 />
               </div>
               <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>Filter</button>
@@ -103,8 +103,8 @@ export default function DataQuality() {
                     <td>{row.type}</td>
                     <td>
                       <span className={`badge ${
-                        row.sev === 'Critical' ? 'badge-danger' : 
-                        row.sev === 'High' ? 'badge-warning' : 
+                        row.sev === 'Critical' ? 'badge-danger' :
+                        row.sev === 'High' ? 'badge-warning' :
                         row.sev === 'Medium' ? 'badge-primary' : 'badge-success'
                       }`}>
                         {row.sev}

@@ -18,10 +18,10 @@ class TestHybridStrategy(unittest.TestCase):
             {'id': 3},
             {'id': 4}
         ]
-        
+
         # margin uses the first two choices.
         predictions = {
-            1: [{'result': [{'value': {'choices': ['A']}}], 'score': 0.9}, 
+            1: [{'result': [{'value': {'choices': ['A']}}], 'score': 0.9},
                 {'result': [{'value': {'choices': ['B']}}], 'score': 0.8}], # diff = 0.1, margin = 0.1
             2: [{'result': [{'value': {'choices': ['A']}}], 'score': 0.99},
                 {'result': [{'value': {'choices': ['B']}}], 'score': 0.01}], # diff = 0.98, margin = 0.98
@@ -30,9 +30,9 @@ class TestHybridStrategy(unittest.TestCase):
             4: [{'result': [{'value': {'choices': ['A']}}], 'score': 0.7},
                 {'result': [{'value': {'choices': ['B']}}], 'score': 0.6}] # diff = 0.1, margin = 0.1
         }
-        
+
         selected, scores = self.strategy.select(tasks, predictions, batch_size=2)
-        
+
         self.assertEqual(len(selected), 2)
         # Margin should prefer task 3 (lowest margin = most uncertain) and then tasks 1 or 4.
         # Hybrid strategy combines this with random. Let's just assert that it runs without errors.

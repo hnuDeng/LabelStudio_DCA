@@ -19,16 +19,16 @@ def run_all_tests():
     # Create test suite
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    
+
     # Add test cases
     suite.addTests(loader.loadTestsFromModule(sys.modules['tests.test_active_learning']))
     suite.addTests(loader.loadTestsFromModule(sys.modules['tests.test_data_quality']))
     suite.addTests(loader.loadTestsFromModule(sys.modules['tests.test_drift_detection']))
-    
+
     # Run tests
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    
+
     return result.wasSuccessful()
 
 

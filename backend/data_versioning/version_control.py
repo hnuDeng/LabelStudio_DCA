@@ -60,7 +60,7 @@ class DataVersionControl:
         self.versions: Dict[str, DataVersion] = {}
         self.current_version: Optional[str] = None
         self._next_version_num = 1
-        
+
         # Load from DB
         from backend.database import SessionLocal, DBVersionCommit
         with SessionLocal() as db:
@@ -79,7 +79,7 @@ class DataVersionControl:
                     self._next_version_num = max(self._next_version_num, num + 1)
                 except ValueError:
                     pass
-                    
+
             # Try to guess current version
             if self.versions:
                 self.current_version = max(self.versions.values(), key=lambda v: v.created_at).version_id

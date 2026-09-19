@@ -10,11 +10,11 @@ class TestDataVersionControl(unittest.TestCase):
         version = self.vcs.create_version(data=data, description="Initial")
         self.assertIsNotNone(version.version_id)
         self.assertEqual(version.description, "Initial")
-        
+
     def test_get_history(self):
         v1 = self.vcs.create_version(data={"tasks": [1]}, description="A")
         v2 = self.vcs.create_version(data={"tasks": [1, 2]}, description="B")
-        
+
         history = self.vcs.get_history()
         self.assertGreaterEqual(len(history), 2)
         descriptions = [h.description for h in history]

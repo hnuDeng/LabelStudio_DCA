@@ -39,7 +39,7 @@ class DriftDetectionAPI:
         self._next_baseline_id = 1
         self._next_report_id = 1
         self._next_alert_id = 1
-        
+
         # Load from DB
         from backend.database import SessionLocal, DBDriftBaseline
         with SessionLocal() as db:
@@ -98,7 +98,7 @@ class DriftDetectionAPI:
 
         self.baselines[baseline.id] = baseline
         self._next_baseline_id += 1
-        
+
         # Persist to DB
         from backend.database import SessionLocal, DBDriftBaseline
         with SessionLocal() as db:

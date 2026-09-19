@@ -32,7 +32,7 @@ class TestServer(unittest.TestCase):
         response = self.client.post(
             "/api/webhooks/label-studio",
             json={
-                "action": "ANNOTATION_CREATED", 
+                "action": "ANNOTATION_CREATED",
                 "project": {"id": 1},
                 "task": {"id": 100},
                 "annotation": {"id": 200, "result": []}

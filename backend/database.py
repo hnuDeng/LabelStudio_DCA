@@ -17,7 +17,7 @@ class DBActiveLearningConfig(Base):
     batch_size = Column(Integer, default=10)
     is_enabled = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
 class DBActiveLearningRound(Base):
     __tablename__ = "al_rounds"
     id = Column(Integer, primary_key=True, index=True)

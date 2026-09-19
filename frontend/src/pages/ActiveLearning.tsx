@@ -8,7 +8,7 @@ export default function ActiveLearning() {
   return (
     <div className="animate-fade-in">
       <div className="grid grid-cols-3">
-        
+
         {/* Controls Card */}
         <div className="card">
           <div className="card-header">
@@ -20,18 +20,18 @@ export default function ActiveLearning() {
               {isEnabled ? 'Running' : 'Paused'}
             </div>
           </div>
-          
+
           <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>Sampling Strategy</label>
-              <select 
+              <select
                 value={strategy}
                 onChange={(e) => setStrategy(e.target.value)}
-                style={{ 
-                  width: '100%', 
-                  padding: '0.75rem', 
-                  borderRadius: '0.5rem', 
-                  background: 'var(--glass-bg)', 
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  background: 'var(--glass-bg)',
                   border: '1px solid var(--border)',
                   color: 'var(--text-main)',
                   outline: 'none'
@@ -46,14 +46,14 @@ export default function ActiveLearning() {
 
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>Batch Size</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 defaultValue={50}
-                style={{ 
-                  width: '100%', 
-                  padding: '0.75rem', 
-                  borderRadius: '0.5rem', 
-                  background: 'var(--glass-bg)', 
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  background: 'var(--glass-bg)',
                   border: '1px solid var(--border)',
                   color: 'var(--text-main)',
                   outline: 'none'
@@ -62,8 +62,8 @@ export default function ActiveLearning() {
             </div>
 
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <button 
-                className={`btn ${isEnabled ? 'btn-outline' : 'btn-primary'}`} 
+              <button
+                className={`btn ${isEnabled ? 'btn-outline' : 'btn-primary'}`}
                 style={{ flex: 1, justifyContent: 'center' }}
                 onClick={() => setIsEnabled(!isEnabled)}
               >
@@ -87,7 +87,7 @@ export default function ActiveLearning() {
               Run Manual Sample
             </button>
           </div>
-          
+
           <div className="table-container" style={{ marginTop: '1rem' }}>
             <table>
               <thead>

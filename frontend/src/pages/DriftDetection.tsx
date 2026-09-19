@@ -15,7 +15,7 @@ export default function DriftDetection() {
   return (
     <div className="animate-fade-in">
       <div className="grid grid-cols-3" style={{ gridTemplateColumns: '2fr 1fr' }}>
-        
+
         {/* Main Chart */}
         <div className="card">
           <div className="card-header">
@@ -25,7 +25,7 @@ export default function DriftDetection() {
             </h2>
             <div className="badge badge-warning">Elevated Risk</div>
           </div>
-          
+
           <div style={{ height: '350px', width: '100%', marginTop: '1rem' }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={driftData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -42,7 +42,7 @@ export default function DriftDetection() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
                 <YAxis stroke="var(--text-muted)" tick={{ fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ background: 'var(--bg-card)', border: 'var(--glass-border)', borderRadius: '0.5rem', backdropFilter: 'blur(12px)' }}
                   itemStyle={{ color: 'var(--text-main)' }}
                 />
@@ -80,7 +80,7 @@ export default function DriftDetection() {
                 Recent Alerts
               </h2>
             </div>
-            
+
             <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div style={{ width: '2px', background: 'var(--danger)', borderRadius: '2px' }}></div>

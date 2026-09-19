@@ -32,7 +32,7 @@ class DataQualityAPI:
         self.configs: Dict[int, QualityConfig] = {}
         self._next_report_id = 1
         self._next_issue_id = 1
-        
+
         # Load from DB
         from backend.database import SessionLocal, DBQualityReport
         from backend.data_quality.models import ReportType
@@ -86,7 +86,7 @@ class DataQualityAPI:
 
         # Store report in memory
         self.reports[report.id] = report
-        
+
         # Persist to DB
         from backend.database import SessionLocal, DBQualityReport
         with SessionLocal() as db:

@@ -126,31 +126,31 @@ class DiversitySampling(BaseStrategy):
 
         # Greedy farthest-first traversal
         selected_indices = []
-        
+
         # Start with random task
         first_idx = np.random.randint(n_tasks)
         selected_indices.append(first_idx)
-        
+
         # Maintain minimum distance from each point to the selected set
         # Initialize with distance to the first selected point
         min_distances = distances[:, first_idx].copy()
-        
+
         # We don't need to explicitly track remaining_indices if we just set min_distances of selected to -1
         min_distances[first_idx] = -1.0
-        
+
         while len(selected_indices) < batch_size:
             # The next best index is the one with the maximum minimum distance to the selected set
             best_idx = int(np.argmax(min_distances))
-            
+
             # If the max distance is -1, it means all points have been selected
             if min_distances[best_idx] < 0:
                 break
-                
+
             selected_indices.append(best_idx)
-            
+
             # Update min_distances efficiently
             min_distances = np.minimum(min_distances, distances[:, best_idx])
-            
+
             # Mark the newly selected index as unavailable
             min_distances[best_idx] = -1.0
 
