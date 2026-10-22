@@ -1,9 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, Header, Request
+from fastapi import FastAPI, Depends, HTTPException, Header
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import os
 import hmac
-import hashlib
 
 # Import existing APIs
 from backend.active_learning.api import ActiveLearningAPI
@@ -31,8 +30,7 @@ app.add_middleware(
 LABEL_STUDIO_URL = os.environ.get("LABEL_STUDIO_URL", "http://localhost:8080")
 LABEL_STUDIO_API_KEY = os.environ.get("LABEL_STUDIO_API_KEY", "")
 
-# Label Studio Secret for Webhook Signature (set in environment)
-LABEL_STUDIO_WEBHOOK_SECRET = os.environ.get("LABEL_STUDIO_WEBHOOK_SECRET", "default_secret")
+LABEL_STUDIO_WEBHOOK_SECRET = os.environ.get("LABEL_STUDIO_WEBHOOK_SECRET", "")
 
 # In-memory instances for demonstration (in production, they'd use a real DB)
 al_api = ActiveLearningAPI()
@@ -40,15 +38,18 @@ drift_api = DriftDetectionAPI()
 dq_api = DataQualityAPI()
 anomaly_engine = AnomalyDetectionEngine(project_id=1)
 
-def verify_webhook_signature(request: Request, x_label_studio_signature: str = Header(None)):
-    """
-    Dependency to verify Label Studio webhook requests.
-    Note: In a real implementation, you'd compute the HMAC of the raw body.
-    For this prototype, we do a basic check if the secret is provided in the header or simply accept if no secret is configured.
-    """
-    # Simply bypass for prototype unless strictly configured
-    if x_label_studio_signature == "invalid_signature":
-        raise HTTPException(status_code=403, detail="Invalid signature")
+def verify_webhook_token(authorization: Optional[str] = Header(None)):
+    """Authenticate the static Bearer header configured in Label Studio."""
+    if not LABEL_STUDIO_WEBHOOK_SECRET:
+        if os.environ.get("LABEL_STUDIO_ALLOW_UNSIGNED_WEBHOOKS", "false").lower() == "true":
+            return True
+        raise HTTPException(status_code=503, detail="Webhook authentication is not configured")
+
+    scheme, _, token = (authorization or "").partition(" ")
+    if scheme.lower() != "bearer" or not hmac.compare_digest(
+        token.encode("utf-8"), LABEL_STUDIO_WEBHOOK_SECRET.encode("utf-8")
+    ):
+        raise HTTPException(status_code=403, detail="Invalid webhook token")
     return True
 
 class WebhookPayload(BaseModel):
@@ -58,7 +59,7 @@ class WebhookPayload(BaseModel):
     annotation: Optional[Dict[str, Any]] = None
 
 @app.post("/api/webhooks/label-studio")
-async def label_studio_webhook(payload: WebhookPayload, verified: bool = Depends(verify_webhook_signature)):
+async def label_studio_webhook(payload: WebhookPayload, verified: bool = Depends(verify_webhook_token)):
     """
     Endpoint to receive Label Studio webhooks.
     """

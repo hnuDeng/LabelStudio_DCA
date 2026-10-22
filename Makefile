@@ -5,7 +5,7 @@ setup:
 	cd frontend && npm install
 
 test:
-	cd backend && pytest ../tests/
+	python -m pytest tests/
 
 lint:
 	cd backend && flake8 .

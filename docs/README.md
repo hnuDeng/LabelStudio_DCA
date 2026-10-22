@@ -119,8 +119,7 @@ function App() {
 ## 测试
 
 ```bash
-cd tests
-python run_tests.py
+python -m pytest tests/ -q
 ```
 
 ## 许可证
