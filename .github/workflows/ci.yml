@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  backend-test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,11 +26,6 @@ jobs:
     - name: Run Python Tests
       run: python -m pytest tests/ --cov=backend
 
-  frontend-build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
     - name: Use Node.js 24.x
       uses: actions/setup-node@v4
       with:
@@ -42,6 +37,10 @@ jobs:
       run: |
         cd frontend
         npm ci
+
+    - name: Test dashboard with the local backend
+      working-directory: frontend
+      run: node --test tests/dashboard-test-support.test.mjs tests/dashboard.test.mjs
 
     - name: Build frontend
       run: |

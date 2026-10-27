@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 from backend.active_learning.strategies.hybrid import HybridStrategy
 from backend.active_learning.strategies.uncertainty import MarginSampling

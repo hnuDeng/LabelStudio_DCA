@@ -65,6 +65,7 @@ class DataQualityAPI:
         annotations: List[Dict[str, Any]],
         assessors: Optional[List[str]] = None,
         user_id: Optional[int] = None,
+        event_hash: Optional[str] = None,
     ) -> QualityReport:
         """Run quality assessment for a project."""
         engine = QualityAssessmentEngine(project_id)
@@ -75,23 +76,13 @@ class DataQualityAPI:
             user_id=user_id,
         )
 
-        # Assign IDs
-        report.id = self._next_report_id
-        self._next_report_id += 1
-
-        for i, issue in enumerate(report.issues):
-            issue.id = self._next_issue_id
-            issue.report_id = report.id
-            self._next_issue_id += 1
-
-        # Store report in memory
-        self.reports[report.id] = report
+        if event_hash and any("error" in value for value in report.statistics.values()):
+            raise RuntimeError("Quality assessment failed")
 
         # Persist to DB
-        from backend.database import SessionLocal, DBQualityReport
+        from backend.database import SessionLocal, DBQualityReport, DBWebhookQualityEvent
         with SessionLocal() as db:
             db_report = DBQualityReport(
-                id=report.id,
                 project_id=report.project_id,
                 overall_score=report.overall_score,
                 consistency_score=report.consistency_score,
@@ -101,7 +92,19 @@ class DataQualityAPI:
                 issues=[]
             )
             db.add(db_report)
+            db.flush()
+            report.id = db_report.id
+            if event_hash:
+                db.add(DBWebhookQualityEvent(event_hash=event_hash, project_id=project_id,
+                    report_id=report.id, tasks_analyzed=report.tasks_analyzed,
+                    annotations_analyzed=report.annotations_analyzed))
             db.commit()
+
+        for issue in report.issues:
+            issue.id = self._next_issue_id
+            issue.report_id = report.id
+            self._next_issue_id += 1
+        self.reports[report.id] = report
 
         logger.info(
             f"Quality assessment completed for project {project_id}: "

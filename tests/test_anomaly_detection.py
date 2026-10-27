@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 import numpy as np
 from backend.anomaly_detection.engine import AnomalyDetectionEngine

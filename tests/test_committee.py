@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 from backend.active_learning.strategies.committee import QueryByCommittee
 import numpy as np

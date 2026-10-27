@@ -1,3 +1,5 @@
+import tests
+
 import os
 import unittest
 from unittest.mock import patch
@@ -88,7 +90,7 @@ class TestServer(unittest.TestCase):
                 json={"action": "TASKS_CREATED", "project": {"id": 1}},
             )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["message"], "Processed new tasks")
+        self.assertEqual(response.json()["status"], "unsupported")
 
     def test_label_studio_webhook_secret_overrides_unsigned_demo(self):
         with patch.dict(os.environ, {"LABEL_STUDIO_ALLOW_UNSIGNED_WEBHOOKS": "true"}):
@@ -106,7 +108,7 @@ class TestServer(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["action"], "TASKS_CREATED")
-        self.assertEqual(response.json()["message"], "Processed new tasks")
+        self.assertEqual(response.json()["status"], "unsupported")
 
     def test_label_studio_webhook_annotation(self):
         response = self.client.post(
@@ -119,6 +121,6 @@ class TestServer(unittest.TestCase):
             },
             headers=self.headers,
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 422)
         self.assertEqual(response.json()["action"], "ANNOTATION_CREATED")
-        self.assertEqual(response.json()["message"], "Processed annotation via DCA pipeline")
+        self.assertEqual(response.json()["status"], "insufficient_data")

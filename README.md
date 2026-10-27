@@ -49,7 +49,7 @@ Configure webhook authentication as described below, then start the backend from
 python -m uvicorn backend.server:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Open [the health endpoint](http://127.0.0.1:8000/api/health) to check the server, or [the API documentation](http://127.0.0.1:8000/docs) to try requests. Webhooks require the authentication configuration below. The current webhook handlers acknowledge events and return demonstration responses; the DCA pipeline calls inside them are placeholders.
+Open [the health endpoint](http://127.0.0.1:8000/api/health) to check the server, or [the API documentation](http://127.0.0.1:8000/docs) to try requests. Webhooks require the authentication configuration below. The backend stores reports in `dca_data.db` in its working directory. To select a separate SQLite database before startup, set `DCA_DATABASE_URL`, for example `sqlite:///./local-demo.db`.
 
 ### Webhook Authentication
 
@@ -79,10 +79,12 @@ In a second Bash terminal, set `LABEL_STUDIO_WEBHOOK_SECRET` to the same token u
 curl http://127.0.0.1:8000/api/webhooks/label-studio \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $LABEL_STUDIO_WEBHOOK_SECRET" \
-  -d '{"action":"TASKS_CREATED","project":{"id":1},"tasks":[{"id":100}]}'
+  -d '{"action":"ANNOTATION_CREATED","project":{"id":1},"task":{"id":100},"annotation":{"id":200,"result":[{"value":{"choices":["yes"]}}]}}'
 ```
 
-Expected response: `{"status":"received","action":"TASKS_CREATED","message":"Processed new tasks"}`.
+The response has `status: "processed"` and a report ID. `ANNOTATION_CREATED` and `ANNOTATION_UPDATED` require positive project, task and annotation IDs and a non-empty result whose entries contain non-empty value objects. If the task supplies a project ID (either an integer or an object with `id`), it must match the event project. Missing data and invalid input return HTTP 422 with `insufficient_data` or `invalid`. Other actions return `unsupported`; assessment or persistence failures return HTTP 500 with `failed`. An identical action, project, task and annotation is deduplicated by a persisted hash and returns `duplicate` with the original report ID, including after restart. A changed payload is a new event. This is exact payload deduplication, not comprehensive replay protection.
+
+The assessment runs the existing completeness assessor on the single task and annotation in the event. Because that task is annotated, this limited coverage is normally 100%; it is not a project-wide quality score or evidence of annotator agreement. Read the latest webhook report at `/api/projects/1/quality-report`; change `1` to the project ID. This read-only endpoint is unauthenticated, so keep the development server local or add suitable access controls before exposing it. Other DCA modules and the other frontend pages remain demonstrations and are not updated by this event.
 
 ### Frontend Setup
 ```bash
@@ -90,6 +92,8 @@ cd frontend
 npm ci
 npm run dev
 ```
+
+The Dashboard defaults to project 1; enter a project ID and select **Load project** to fetch or refresh its latest report. It uses `http://127.0.0.1:8000` by default; set `VITE_API_BASE_URL` before starting Vite to use a different backend URL.
 
 ### Verification
 
@@ -104,7 +108,10 @@ From `frontend/`:
 ```bash
 npm run build
 npm run lint
+node --test tests/dashboard.test.mjs
 ```
+
+The Python tests select an in-memory database before importing the backend. The webhook integration and local end-to-end tests use temporary SQLite files; no real Label Studio instance is required. The end-to-end test starts a local backend process and requires the installed Python and Node dependencies.
 
 ## 🤝 Contributing
 
