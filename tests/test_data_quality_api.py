@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 from backend.data_quality.api import DataQualityAPI
 

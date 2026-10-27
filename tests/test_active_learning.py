@@ -1,3 +1,5 @@
+import tests
+
 """
 Tests for Active Learning module.
 """

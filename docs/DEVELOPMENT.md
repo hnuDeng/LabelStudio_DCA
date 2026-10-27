@@ -68,15 +68,14 @@ The frontend is organized as:
 
 ## Testing
 
-Run all tests:
+Run all tests from the repository root:
 ```bash
-cd tests
-python run_tests.py
+python -m pytest tests/ -q
 ```
 
 Run specific module tests:
 ```bash
-python -m pytest test_active_learning.py -v
-python -m pytest test_data_quality.py -v
-python -m pytest test_drift_detection.py -v
+python -m pytest tests/test_active_learning.py -v
+python -m pytest tests/test_data_quality.py -v
+python -m pytest tests/test_drift_detection.py -v
 ```

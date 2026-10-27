@@ -1,10 +1,14 @@
 import os
 from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, JSON, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.pool import StaticPool
 from datetime import datetime
 
-DATABASE_URL = "sqlite:///:memory:" if os.environ.get("TESTING") else "sqlite:///./dca_data.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+DATABASE_URL = "sqlite:///:memory:" if os.environ.get("TESTING") else os.environ.get("DCA_DATABASE_URL", "sqlite:///./dca_data.db")
+engine_options = {"connect_args": {"check_same_thread": False}}
+if os.environ.get("TESTING"):
+    engine_options["poolclass"] = StaticPool
+engine = create_engine(DATABASE_URL, **engine_options)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -52,6 +56,14 @@ class DBQualityReport(Base):
     issue_count = Column(Integer)
     issues = Column(JSON) # serialized issues
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class DBWebhookQualityEvent(Base):
+    __tablename__ = "webhook_quality_events"
+    event_hash = Column(String(64), primary_key=True)
+    project_id = Column(Integer, index=True, nullable=False)
+    report_id = Column(Integer, nullable=False)
+    tasks_analyzed = Column(Integer, nullable=False)
+    annotations_analyzed = Column(Integer, nullable=False)
 
 class DBVersionCommit(Base):
     __tablename__ = "version_commits"

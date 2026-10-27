@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 from backend.data_versioning.version_control import DataVersionControl
 

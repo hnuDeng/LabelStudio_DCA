@@ -1,3 +1,5 @@
+import tests
+
 """
 Tests for Data Quality module.
 """

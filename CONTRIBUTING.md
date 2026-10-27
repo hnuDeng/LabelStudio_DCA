@@ -36,6 +36,6 @@ Enhancement suggestions are tracked as GitHub issues. Please provide the followi
 1. Fork the repository and create your branch from `main`.
 2. Set up the development environment (`make setup` if available, or follow README).
 3. If you've added code that should be tested, add tests.
-4. Ensure the test suite passes (`pytest` and frontend tests).
+4. From the repository root, run `python -m pytest tests/ -q`. In `frontend/`, run `npm ci`, `npm run build`, and `npm run lint`.
 5. Make sure your code lints.
 6. Issue that pull request!

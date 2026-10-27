@@ -1,3 +1,5 @@
+import tests
+
 import unittest
 from backend.drift_detection.api import DriftDetectionAPI
 import numpy as np
